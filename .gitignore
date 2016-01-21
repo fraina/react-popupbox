@@ -1,0 +1,12 @@
+Thumbs.db
+*~
+*.log
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+.tags
+.idea/
+bower_components/
+node_modules/
+build/
