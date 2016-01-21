@@ -1,4 +1,4 @@
-react-popupbox
+React Popupbox
 ===========================
 
 [![npm](https://img.shields.io/npm/l/express.svg?style=flat)](https://opensource.org/licenses/MIT)

@@ -1,7 +1,10 @@
 import React, { Component, cloneElement } from 'react';
 import { merge, omit } from 'lodash';
 
-export const { PopupboxModal, PopupboxTrigger } = require('./lib/popupbox');
+import { PopModal, PopTrigger } from './lib/popupbox';
+
+export const PopupboxModal = PopModal;
+export const PopupboxTrigger = PopTrigger;
 
 export default class Popupbox extends Component {
   constructor(props) {

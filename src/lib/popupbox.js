@@ -2,7 +2,7 @@ import React, { Component, cloneElement } from 'react';
 import { get, merge } from 'lodash';
 import classNames from 'classnames';
 
-export class PopupboxModal extends Component {
+export class PopModal extends Component {
   constructor(props) {
     super(props);
 
@@ -106,7 +106,7 @@ export class PopupboxModal extends Component {
   }
 }
 
-export class PopupboxTrigger extends Component {
+export class PopTrigger extends Component {
   render() {
     const childProps = {};
     Object.keys(this.props).map((key, index) => {
