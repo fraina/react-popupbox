@@ -1,0 +1,26 @@
+{
+  "name": "react-popupbox",
+  "version": "0.0.0",
+  "description": "A simple lightbox component for react",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fraina/react-popupbox.git"
+  },
+  "keywords": [
+    "react",
+    "react component",
+    "lightbox",
+    "pop-up"
+  ],
+  "author": "Fraina <jscaem@gmail.com> (http://github.com/Fraina)",
+  "license": "MIT",
+  "bugs": {
+    "url": "http://github.com/Fraina/react-popupbox/issues"
+  },
+  "homepage": "http://github.com/Fraina/react-popupbox#readme",
+  "dependencies": {
+    "classnames": "^2.2.3",
+    "lodash": "^4.0.0"
+  }
+}
