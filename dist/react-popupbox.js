@@ -72,13 +72,13 @@ babelHelpers.possibleConstructorReturn = function (self, call) {
 
 babelHelpers;
 
-var Modal = function (_Component) {
-  babelHelpers.inherits(Modal, _Component);
+var PopModal = function (_Component) {
+  babelHelpers.inherits(PopModal, _Component);
 
-  function Modal(props) {
-    babelHelpers.classCallCheck(this, Modal);
+  function PopModal(props) {
+    babelHelpers.classCallCheck(this, PopModal);
 
-    var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Modal).call(this, props));
+    var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(PopModal).call(this, props));
 
     var defaultConfig = {
       enable: false,
@@ -93,7 +93,7 @@ var Modal = function (_Component) {
     return _this;
   }
 
-  babelHelpers.createClass(Modal, [{
+  babelHelpers.createClass(PopModal, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
       var _this2 = this;
@@ -219,18 +219,18 @@ var Modal = function (_Component) {
       );
     }
   }]);
-  return Modal;
+  return PopModal;
 }(React.Component);
 
-var Trigger = function (_Component2) {
-  babelHelpers.inherits(Trigger, _Component2);
+var PopTrigger = function (_Component2) {
+  babelHelpers.inherits(PopTrigger, _Component2);
 
-  function Trigger() {
-    babelHelpers.classCallCheck(this, Trigger);
-    return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Trigger).apply(this, arguments));
+  function PopTrigger() {
+    babelHelpers.classCallCheck(this, PopTrigger);
+    return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(PopTrigger).apply(this, arguments));
   }
 
-  babelHelpers.createClass(Trigger, [{
+  babelHelpers.createClass(PopTrigger, [{
     key: 'render',
     value: function render() {
       var _this5 = this;
@@ -246,11 +246,11 @@ var Trigger = function (_Component2) {
       return React.cloneElement(this.props.children, childProps);
     }
   }]);
-  return Trigger;
+  return PopTrigger;
 }(React.Component);
 
-var PopupboxModal = Modal;
-var PopupboxTrigger = Trigger;
+var PopupboxModal = PopModal;
+var PopupboxTrigger = PopTrigger;
 
 var Popupbox = function (_Component) {
   babelHelpers.inherits(Popupbox, _Component);
@@ -324,4 +324,4 @@ var Popupbox = function (_Component) {
 
 exports.PopupboxModal = PopupboxModal;
 exports.PopupboxTrigger = PopupboxTrigger;
-exports['default'] = Popupbox;
+exports.Popupbox = Popupbox;
