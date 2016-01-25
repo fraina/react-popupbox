@@ -236,7 +236,7 @@ var PopTrigger = function (_Component2) {
       var _this5 = this;
 
       var childProps = {};
-      Object.keys(this.props).map(function (key, index) {
+      Object.keys(this.props).map(function (key) {
         if (key !== 'children' && key !== 'openPopupbox') {
           childProps[key] = _this5.props[key];
         } else if (key === 'openPopupbox') {
@@ -260,8 +260,6 @@ var Popupbox = function (_Component) {
 
     var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Popupbox).call(this, props));
 
-    var overlayOpacity = _this.props.overlayOpacity;
-
     var defaultConfig = {
       overlayOpacity: 0.75,
       display: false,
@@ -278,15 +276,11 @@ var Popupbox = function (_Component) {
   babelHelpers.createClass(Popupbox, [{
     key: 'openPopupbox',
     value: function openPopupbox() {
-      var fadeIn = this.state.fadeIn;
-
       this.setState({ display: true });
     }
   }, {
     key: 'closePopupbox',
     value: function closePopupbox() {
-      var fadeOut = this.state.fadeOut;
-
       this.setState({ display: false });
     }
   }, {
