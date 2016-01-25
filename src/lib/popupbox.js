@@ -20,7 +20,7 @@ export class PopModal extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', (e) => {
-      if ((this.props.display) && (e.keyCode === 27)){
+      if ((this.props.display) && (e.keyCode === 27)) {
         this.props.closePopupbox();
       }
     });
@@ -109,7 +109,7 @@ export class PopModal extends Component {
 export class PopTrigger extends Component {
   render() {
     const childProps = {};
-    Object.keys(this.props).map((key, index) => {
+    Object.keys(this.props).map((key) => {
       if (key !== 'children' && key !== 'openPopupbox') {
         childProps[key] = this.props[key];
       } else if (key === 'openPopupbox') {

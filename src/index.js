@@ -9,10 +9,6 @@ export const PopupboxTrigger = PopTrigger;
 export class Popupbox extends Component {
   constructor(props) {
     super(props);
-    const {
-      overlayOpacity
-    } = this.props;
-
     const defaultConfig = {
       overlayOpacity: 0.75,
       display: false,
@@ -26,12 +22,10 @@ export class Popupbox extends Component {
   }
 
   openPopupbox() {
-    const { fadeIn } = this.state;
     this.setState({ display: true });
   }
 
   closePopupbox() {
-    const { fadeOut } = this.state;
     this.setState({ display: false });
   }
 
@@ -45,7 +39,7 @@ export class Popupbox extends Component {
         closePopupbox: this.closePopupbox.bind(this),
         ...this.state
       }
-      for (var j in this.state){
+      for (var j in this.state) {
         childProps[j] = this.state[j];
       }
       return cloneElement(child, childProps);
