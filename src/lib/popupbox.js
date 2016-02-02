@@ -86,14 +86,14 @@ export class PopModal extends Component {
 
   render() {
     const titleBar = this.state;
-    const { overlayOpacity, display, children, closePopupbox } = this.props;
+    const { overlayOpacity, display, children, closePopupbox, className } = this.props;
 
     return (
       <div id="popupbox"
            data-type="popup"
            data-title={ (titleBar.enable) ? titleBar.position : null }
            style={{ 'transition': this.state.transition }}
-           className={ classNames({ 'is-active': display }) }>
+           className={ classNames(className, { 'is-active': display }) }>
         <div id="popupbox-wrapper">
           { titleBar.enable && this.renderTitleBar() }
           <div id="popupbox-content">
@@ -110,7 +110,7 @@ export class PopTrigger extends Component {
   render() {
     const childProps = {};
     Object.keys(this.props).map((key) => {
-      if (key !== 'children' && key !== 'openPopupbox') {
+      if (key !== 'children' && key !== 'openPopupbox' && key !== 'className') {
         childProps[key] = this.props[key];
       } else if (key === 'openPopupbox') {
         childProps['onClick'] = this.props[key];

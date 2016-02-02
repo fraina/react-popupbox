@@ -197,6 +197,7 @@ var PopModal = function (_Component) {
       var display = _props3.display;
       var children = _props3.children;
       var closePopupbox = _props3.closePopupbox;
+      var className = _props3.className;
 
       return React__default.createElement(
         'div',
@@ -204,7 +205,7 @@ var PopModal = function (_Component) {
           'data-type': 'popup',
           'data-title': titleBar.enable ? titleBar.position : null,
           style: { 'transition': this.state.transition },
-          className: classNames({ 'is-active': display }) },
+          className: classNames(className, { 'is-active': display }) },
         React__default.createElement(
           'div',
           { id: 'popupbox-wrapper' },
@@ -237,7 +238,7 @@ var PopTrigger = function (_Component2) {
 
       var childProps = {};
       Object.keys(this.props).map(function (key) {
-        if (key !== 'children' && key !== 'openPopupbox') {
+        if (key !== 'children' && key !== 'openPopupbox' && key !== 'className') {
           childProps[key] = _this5.props[key];
         } else if (key === 'openPopupbox') {
           childProps['onClick'] = _this5.props[key];
