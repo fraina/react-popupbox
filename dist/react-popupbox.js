@@ -99,7 +99,7 @@ var PopModal = function (_Component) {
       var _this2 = this;
 
       document.addEventListener('keydown', function (e) {
-        if (_this2.props.display && e.keyCode === 27) {
+        if (_this2.props.show && e.keyCode === 27) {
           _this2.props.closePopupbox();
         }
       });
@@ -114,13 +114,13 @@ var PopModal = function (_Component) {
     value: function componentWillReceiveProps(nextProps) {
       var _this3 = this;
 
-      if (this.props.display !== nextProps.display) {
+      if (this.props.show !== nextProps.show) {
         this.cleanUp();
 
         var fadeIn = nextProps.fadeIn;
         var fadeOut = nextProps.fadeOut;
 
-        if (nextProps.display) {
+        if (nextProps.show) {
           (function () {
             var _props = _this3.props;
             var onOpen = _props.onOpen;
@@ -164,6 +164,7 @@ var PopModal = function (_Component) {
       var text = _state.text;
       var closeText = _state.closeText;
       var closeButton = _state.closeButton;
+      var closeButtonClassName = _state.closeButtonClassName;
       var closePopupbox = this.props.closePopupbox;
 
       var titleBarClass = {};
@@ -183,7 +184,8 @@ var PopModal = function (_Component) {
           'button',
           {
             id: 'popupbox-btn--close',
-            onClick: closePopupbox },
+            onClick: closePopupbox,
+            className: closeButtonClassName },
           closeText
         )
       );
@@ -194,7 +196,7 @@ var PopModal = function (_Component) {
       var titleBar = this.state;
       var _props3 = this.props;
       var overlayOpacity = _props3.overlayOpacity;
-      var display = _props3.display;
+      var show = _props3.show;
       var children = _props3.children;
       var closePopupbox = _props3.closePopupbox;
       var className = _props3.className;
@@ -204,11 +206,11 @@ var PopModal = function (_Component) {
         { id: 'popupbox',
           'data-type': 'popup',
           'data-title': titleBar.enable ? titleBar.position : null,
-          style: { 'transition': this.state.transition },
-          className: classNames(className, { 'is-active': display }) },
+          style: { transition: this.state.transition },
+          className: classNames({ 'is-active': show }) },
         React__default.createElement(
           'div',
-          { id: 'popupbox-wrapper' },
+          { id: 'popupbox-wrapper', className: className },
           titleBar.enable && this.renderTitleBar(),
           React__default.createElement(
             'div',
@@ -263,7 +265,7 @@ var Popupbox = function (_Component) {
 
     var defaultConfig = {
       overlayOpacity: 0.75,
-      display: false,
+      show: false,
       fadeIn: false,
       fadeInSpeed: 500,
       fadeOut: true,
@@ -277,12 +279,12 @@ var Popupbox = function (_Component) {
   babelHelpers.createClass(Popupbox, [{
     key: 'openPopupbox',
     value: function openPopupbox() {
-      this.setState({ display: true });
+      this.setState({ show: true });
     }
   }, {
     key: 'closePopupbox',
     value: function closePopupbox() {
-      this.setState({ display: false });
+      this.setState({ show: false });
     }
   }, {
     key: 'renderChildren',

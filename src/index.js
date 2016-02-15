@@ -11,7 +11,7 @@ export class Popupbox extends Component {
     super(props);
     const defaultConfig = {
       overlayOpacity: 0.75,
-      display: false,
+      show: false,
       fadeIn: false,
       fadeInSpeed: 500,
       fadeOut: true,
@@ -22,11 +22,11 @@ export class Popupbox extends Component {
   }
 
   openPopupbox() {
-    this.setState({ display: true });
+    this.setState({ show: true });
   }
 
   closePopupbox() {
-    this.setState({ display: false });
+    this.setState({ show: false });
   }
 
   renderChildren() {

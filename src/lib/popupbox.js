@@ -20,7 +20,7 @@ export class PopModal extends Component {
 
   componentDidMount() {
     document.addEventListener('keydown', (e) => {
-      if ((this.props.display) && (e.keyCode === 27)) {
+      if ((this.props.show) && (e.keyCode === 27)) {
         this.props.closePopupbox();
       }
     });
@@ -31,11 +31,11 @@ export class PopModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.display !== nextProps.display) {
+    if (this.props.show !== nextProps.show) {
       this.cleanUp();
 
       const { fadeIn, fadeOut } = nextProps;
-      if (nextProps.display) {
+      if (nextProps.show) {
         const { onOpen, onComplete } = this.props;
         onOpen && onOpen();
         this.setState({
@@ -62,7 +62,7 @@ export class PopModal extends Component {
   }
 
   renderTitleBar() {
-    const { className, text, closeText, closeButton } = this.state;
+    const { className, text, closeText, closeButton, closeButtonClassName } = this.state;
     const { closePopupbox } = this.props;
 
     const titleBarClass = {};
@@ -76,7 +76,8 @@ export class PopModal extends Component {
         { closeButton &&
           <button
             id="popupbox-btn--close"
-            onClick={closePopupbox}>
+            onClick={closePopupbox}
+            className={closeButtonClassName}>
             { closeText }
           </button>
         }
@@ -86,15 +87,21 @@ export class PopModal extends Component {
 
   render() {
     const titleBar = this.state;
-    const { overlayOpacity, display, children, closePopupbox, className } = this.props;
+    const {
+      overlayOpacity,
+      show,
+      children,
+      closePopupbox,
+      className
+    } = this.props;
 
     return (
       <div id="popupbox"
-           data-type="popup"
-           data-title={ (titleBar.enable) ? titleBar.position : null }
-           style={{ 'transition': this.state.transition }}
-           className={ classNames(className, { 'is-active': display }) }>
-        <div id="popupbox-wrapper">
+        data-type="popup"
+        data-title={ (titleBar.enable) ? titleBar.position : null }
+        style={{ transition: this.state.transition }}
+        className={ classNames({ 'is-active': show }) }>
+        <div id="popupbox-wrapper" className={className}>
           { titleBar.enable && this.renderTitleBar() }
           <div id="popupbox-content">
             { children }
