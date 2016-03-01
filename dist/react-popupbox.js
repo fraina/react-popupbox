@@ -103,12 +103,12 @@ var PopModal = function (_Component) {
   }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      document.addEventListener('keydown', this.onKeyDown.bind(this, e));
+      document.addEventListener('keydown', this.onKeyDown.bind(this));
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      document.removeEventListener('keydown', this.onKeyDown.bind(this, e));
+      document.removeEventListener('keydown', this.onKeyDown.bind(this));
     }
   }, {
     key: 'componentWillReceiveProps',

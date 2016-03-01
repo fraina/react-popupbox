@@ -25,11 +25,11 @@ export class PopModal extends Component {
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.onKeyDown.bind(this, e));
+    document.addEventListener('keydown', this.onKeyDown.bind(this));
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.onKeyDown.bind(this, e));
+    document.removeEventListener('keydown', this.onKeyDown.bind(this));
   }
 
   componentWillReceiveProps(nextProps) {
