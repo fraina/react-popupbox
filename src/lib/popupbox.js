@@ -18,16 +18,18 @@ export class PopModal extends Component {
     });
   }
 
+  onKeyDown(e) {
+    if ((this.props.display) && (e.keyCode === 27)){
+      this.props.closePopupbox();
+    }
+  }
+
   componentDidMount() {
-    document.addEventListener('keydown', (e) => {
-      if ((this.props.show) && (e.keyCode === 27)) {
-        this.props.closePopupbox();
-      }
-    });
+    document.addEventListener('keydown', this.onKeyDown.bind(this, e));
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown');
+    document.removeEventListener('keydown', this.onKeyDown.bind(this, e));
   }
 
   componentWillReceiveProps(nextProps) {
