@@ -94,25 +94,26 @@ var PopModal = function (_Component) {
   }
 
   babelHelpers.createClass(PopModal, [{
+    key: 'onKeyDown',
+    value: function onKeyDown(e) {
+      if (this.props.display && e.keyCode === 27) {
+        this.props.closePopupbox();
+      }
+    }
+  }, {
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
-
-      document.addEventListener('keydown', function (e) {
-        if (_this2.props.show && e.keyCode === 27) {
-          _this2.props.closePopupbox();
-        }
-      });
+      document.addEventListener('keydown', this.onKeyDown.bind(this, e));
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      document.removeEventListener('keydown');
+      document.removeEventListener('keydown', this.onKeyDown.bind(this, e));
     }
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      var _this3 = this;
+      var _this2 = this;
 
       if (this.props.show !== nextProps.show) {
         this.cleanUp();
@@ -122,12 +123,12 @@ var PopModal = function (_Component) {
 
         if (nextProps.show) {
           (function () {
-            var _props = _this3.props;
+            var _props = _this2.props;
             var onOpen = _props.onOpen;
             var onComplete = _props.onComplete;
 
             onOpen && onOpen();
-            _this3.setState({
+            _this2.setState({
               transition: fadeIn ? 'all ' + lodash.get(nextProps, 'fadeInSpeed', 1000) / 1000 + 's' : 'none',
               callback: setTimeout(function () {
                 onComplete && onComplete();
@@ -136,12 +137,12 @@ var PopModal = function (_Component) {
           })();
         } else {
           (function () {
-            var _props2 = _this3.props;
+            var _props2 = _this2.props;
             var onCleanup = _props2.onCleanup;
             var onClosed = _props2.onClosed;
 
             onCleanup && onCleanup();
-            _this3.setState({
+            _this2.setState({
               transition: fadeOut ? 'all ' + lodash.get(nextProps, 'fadeOutSpeed', 1000) / 1000 + 's' : 'none',
               callback: setTimeout(function () {
                 onClosed && onClosed();
@@ -236,14 +237,14 @@ var PopTrigger = function (_Component2) {
   babelHelpers.createClass(PopTrigger, [{
     key: 'render',
     value: function render() {
-      var _this5 = this;
+      var _this4 = this;
 
       var childProps = {};
       Object.keys(this.props).map(function (key) {
         if (key !== 'children' && key !== 'openPopupbox' && key !== 'className') {
-          childProps[key] = _this5.props[key];
+          childProps[key] = _this4.props[key];
         } else if (key === 'openPopupbox') {
-          childProps['onClick'] = _this5.props[key];
+          childProps['onClick'] = _this4.props[key];
         }
       });
       return React.cloneElement(this.props.children, childProps);
