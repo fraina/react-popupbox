@@ -1,20 +1,21 @@
 'use strict';
 
+Object.defineProperty(exports, '__esModule', { value: true });
+
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
 var React = require('react');
-var React__default = 'default' in React ? React['default'] : React;
+var React__default = _interopDefault(React);
 var lodash = require('lodash');
-var classNames = require('classnames');
-classNames = 'default' in classNames ? classNames['default'] : classNames;
+var classNames = _interopDefault(require('classnames'));
 
-var babelHelpers = {};
-
-babelHelpers.classCallCheck = function (instance, Constructor) {
+var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
   }
 };
 
-babelHelpers.createClass = function () {
+var createClass = function () {
   function defineProperties(target, props) {
     for (var i = 0; i < props.length; i++) {
       var descriptor = props[i];
@@ -32,7 +33,7 @@ babelHelpers.createClass = function () {
   };
 }();
 
-babelHelpers.extends = Object.assign || function (target) {
+var _extends = Object.assign || function (target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = arguments[i];
 
@@ -46,7 +47,7 @@ babelHelpers.extends = Object.assign || function (target) {
   return target;
 };
 
-babelHelpers.inherits = function (subClass, superClass) {
+var inherits = function (subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
   }
@@ -62,7 +63,7 @@ babelHelpers.inherits = function (subClass, superClass) {
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
 
-babelHelpers.possibleConstructorReturn = function (self, call) {
+var possibleConstructorReturn = function (self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
   }
@@ -70,15 +71,13 @@ babelHelpers.possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
-babelHelpers;
-
 var PopModal = function (_Component) {
-  babelHelpers.inherits(PopModal, _Component);
+  inherits(PopModal, _Component);
 
   function PopModal(props) {
-    babelHelpers.classCallCheck(this, PopModal);
+    classCallCheck(this, PopModal);
 
-    var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(PopModal).call(this, props));
+    var _this = possibleConstructorReturn(this, Object.getPrototypeOf(PopModal).call(this, props));
 
     var defaultConfig = {
       enable: false,
@@ -93,7 +92,7 @@ var PopModal = function (_Component) {
     return _this;
   }
 
-  babelHelpers.createClass(PopModal, [{
+  createClass(PopModal, [{
     key: 'onKeyDown',
     value: function onKeyDown(e) {
       if (this.props.display && e.keyCode === 27) {
@@ -168,6 +167,7 @@ var PopModal = function (_Component) {
       var closeButtonClassName = _state.closeButtonClassName;
       var closePopupbox = this.props.closePopupbox;
 
+
       var titleBarClass = {};
       if (className) {
         titleBarClass[className] = titleBarClass;
@@ -175,7 +175,7 @@ var PopModal = function (_Component) {
 
       return React__default.createElement(
         'div',
-        { id: 'popupbox-titleBar', className: classNames(titleBarClass) },
+        { className: classNames('popupbox-titleBar', titleBarClass) },
         React__default.createElement(
           'span',
           null,
@@ -184,9 +184,8 @@ var PopModal = function (_Component) {
         closeButton && React__default.createElement(
           'button',
           {
-            id: 'popupbox-btn--close',
             onClick: closePopupbox,
-            className: closeButtonClassName },
+            className: classNames('popupbox-btn--close', closeButtonClassName) },
           closeText
         )
       );
@@ -202,24 +201,24 @@ var PopModal = function (_Component) {
       var closePopupbox = _props3.closePopupbox;
       var className = _props3.className;
 
+
       return React__default.createElement(
         'div',
-        { id: 'popupbox',
-          'data-type': 'popup',
+        { 'data-type': 'popup',
           'data-title': titleBar.enable ? titleBar.position : null,
           style: { transition: this.state.transition },
-          className: classNames({ 'is-active': show }) },
+          className: classNames('popupbox', { 'is-active': show }) },
         React__default.createElement(
           'div',
-          { id: 'popupbox-wrapper', className: className },
+          { className: classNames('popupbox-wrapper', className) },
           titleBar.enable && this.renderTitleBar(),
           React__default.createElement(
             'div',
-            { id: 'popupbox-content' },
+            { className: 'popupbox-content' },
             children
           )
         ),
-        React__default.createElement('div', { id: 'popupbox-overlay', style: { opacity: overlayOpacity }, onClick: closePopupbox })
+        React__default.createElement('div', { className: 'popupbox-overlay', style: { opacity: overlayOpacity }, onClick: closePopupbox })
       );
     }
   }]);
@@ -227,14 +226,14 @@ var PopModal = function (_Component) {
 }(React.Component);
 
 var PopTrigger = function (_Component2) {
-  babelHelpers.inherits(PopTrigger, _Component2);
+  inherits(PopTrigger, _Component2);
 
   function PopTrigger() {
-    babelHelpers.classCallCheck(this, PopTrigger);
-    return babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(PopTrigger).apply(this, arguments));
+    classCallCheck(this, PopTrigger);
+    return possibleConstructorReturn(this, Object.getPrototypeOf(PopTrigger).apply(this, arguments));
   }
 
-  babelHelpers.createClass(PopTrigger, [{
+  createClass(PopTrigger, [{
     key: 'render',
     value: function render() {
       var _this4 = this;
@@ -257,12 +256,12 @@ var PopupboxModal = PopModal;
 var PopupboxTrigger = PopTrigger;
 
 var Popupbox = function (_Component) {
-  babelHelpers.inherits(Popupbox, _Component);
+  inherits(Popupbox, _Component);
 
   function Popupbox(props) {
-    babelHelpers.classCallCheck(this, Popupbox);
+    classCallCheck(this, Popupbox);
 
-    var _this = babelHelpers.possibleConstructorReturn(this, Object.getPrototypeOf(Popupbox).call(this, props));
+    var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Popupbox).call(this, props));
 
     var defaultConfig = {
       overlayOpacity: 0.75,
@@ -277,7 +276,7 @@ var Popupbox = function (_Component) {
     return _this;
   }
 
-  babelHelpers.createClass(Popupbox, [{
+  createClass(Popupbox, [{
     key: 'openPopupbox',
     value: function openPopupbox() {
       this.setState({ show: true });
@@ -296,7 +295,7 @@ var Popupbox = function (_Component) {
 
       var childrenSource = children.length > 1 ? children : new Array(children);
       return childrenSource.map(function (child, index) {
-        var childProps = babelHelpers.extends({
+        var childProps = _extends({
           key: index,
           openPopupbox: _this2.openPopupbox.bind(_this2),
           closePopupbox: _this2.closePopupbox.bind(_this2)

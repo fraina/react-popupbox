@@ -1,4 +1,4 @@
-#popupbox{
+.popupbox{
   width:100%;
   height:100%;
   position: fixed;
@@ -15,11 +15,11 @@
   z-index: 1000;
 };
 
-#popupbox[hidden]{
+.popupbox[hidden]{
   display: none;
 }
 
-#popupbox-overlay{
+.popupbox-overlay{
   position:fixed;
   top: 0;
   left: 0;
@@ -29,11 +29,11 @@
   background: none repeat scroll 0% 0% #000;
 }
 
-#popupbox-content {
+.popupbox-content {
   overflow: hidden;
 }
 
-#popupbox-wrapper {
+.popupbox-wrapper {
   display: -webkit-flex;
   display: -moz-flex;
   display: -ms-flex;
@@ -48,22 +48,22 @@
   position: relative;
 }
 
-#popupbox-titleBar {
+.popupbox-titleBar {
   overflow: hidden;
   display: block;
   position: relative;
 }
 
-#popupbox-btn--close {
+.popupbox-btn--close {
   z-index: 1004;
 }
 
-#popupbox[data-title='bottom'] #popupbox-content { order: 1 }
-#popupbox[data-title='bottom'] #popupbox-titleBar { order: 2 }
+.popupbox[data-title='bottom'] .popupbox-content { order: 1 }
+.popupbox[data-title='bottom'] .popupbox-titleBar { order: 2 }
 
 // ----- default theme ----- //
 
-#popupbox-wrapper {
+.popupbox-wrapper {
   border-radius: 3px;
   overflow: hidden;
   max-width: 80%;
@@ -72,11 +72,11 @@
   background-color: white;
 }
 
-#popupbox-content {
+.popupbox-content {
   padding: 20px 24px 30px;
 }
 
-#popupbox-titleBar {
+.popupbox-titleBar {
   font-weight: bold;
   font-size: 18px;
   text-shadow: 0 -1px 1px rgba(0, 0, 0, .2);
@@ -84,7 +84,7 @@
   border-bottom: 1px #ccc solid;
 }
 
-#popupbox-btn--close {
+.popupbox-btn--close {
   transition: all .5s;
   position: absolute;
   right: 11px;
@@ -95,14 +95,14 @@
   outline: none;
 }
 
-#popupbox-btn--close:hover {
+.popupbox-btn--close:hover {
   color: #000;
 }
 
-#popupbox.is-active {
+.popupbox.is-active {
   opacity: 1;
   pointer-events: auto;
 }
 
-#popupbox[data-title='bottom'] #popupbox-content { box-shadow: 0 1px 1px rgba(0, 0, 0, .3) }
-#popupbox[data-title='bottom'] #popupbox-titleBar { box-shadow: none; border-top: 1px #ccc solid }
+.popupbox[data-title='bottom'] .popupbox-content { box-shadow: 0 1px 1px rgba(0, 0, 0, .3) }
+.popupbox[data-title='bottom'] .popupbox-titleBar { box-shadow: none; border-top: 1px #ccc solid }

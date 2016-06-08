@@ -73,13 +73,12 @@ export class PopModal extends Component {
     }
 
     return (
-      <div id="popupbox-titleBar" className={ classNames(titleBarClass) }>
+      <div className={ classNames('popupbox-titleBar', titleBarClass) }>
         <span>{ (text && text.length) ? text : <br /> }</span>
         { closeButton &&
           <button
-            id="popupbox-btn--close"
             onClick={closePopupbox}
-            className={closeButtonClassName}>
+            className={classNames('popupbox-btn--close', closeButtonClassName)}>
             { closeText }
           </button>
         }
@@ -98,18 +97,17 @@ export class PopModal extends Component {
     } = this.props;
 
     return (
-      <div id="popupbox"
-        data-type="popup"
+      <div data-type="popup"
         data-title={ (titleBar.enable) ? titleBar.position : null }
         style={{ transition: this.state.transition }}
-        className={ classNames({ 'is-active': show }) }>
-        <div id="popupbox-wrapper" className={className}>
+        className={ classNames('popupbox', { 'is-active': show }) }>
+        <div className={ classNames('popupbox-wrapper', className)}>
           { titleBar.enable && this.renderTitleBar() }
-          <div id="popupbox-content">
+          <div className="popupbox-content">
             { children }
           </div>
         </div>
-        <div id="popupbox-overlay" style={{ opacity: overlayOpacity }} onClick={ closePopupbox } />
+        <div className="popupbox-overlay" style={{ opacity: overlayOpacity }} onClick={ closePopupbox } />
       </div>
     );
   }
