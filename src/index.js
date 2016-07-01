@@ -21,6 +21,10 @@ export class Popupbox extends Component {
     this.state = merge({}, defaultConfig, omit(this.props, 'children'));
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.state = merge({}, this.state, omit(nextProps, 'children'));
+  }
+
   openPopupbox() {
     this.setState({ show: true });
   }
@@ -38,9 +42,6 @@ export class Popupbox extends Component {
         openPopupbox: this.openPopupbox.bind(this),
         closePopupbox: this.closePopupbox.bind(this),
         ...this.state
-      }
-      for (var j in this.state) {
-        childProps[j] = this.state[j];
       }
       return cloneElement(child, childProps);
     })

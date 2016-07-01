@@ -114,6 +114,10 @@ var PopModal = function (_Component) {
     value: function componentWillReceiveProps(nextProps) {
       var _this2 = this;
 
+      if (!lodash.isEqual(this.props.titleBar, nextProps.titleBar)) {
+        this.state = lodash.merge({}, this.state, nextProps.titleBar);
+      }
+
       if (this.props.show !== nextProps.show) {
         this.cleanUp();
 
@@ -277,6 +281,11 @@ var Popupbox = function (_Component) {
   }
 
   createClass(Popupbox, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      this.state = lodash.merge({}, this.state, lodash.omit(nextProps, 'children'));
+    }
+  }, {
     key: 'openPopupbox',
     value: function openPopupbox() {
       this.setState({ show: true });
@@ -300,9 +309,6 @@ var Popupbox = function (_Component) {
           openPopupbox: _this2.openPopupbox.bind(_this2),
           closePopupbox: _this2.closePopupbox.bind(_this2)
         }, _this2.state);
-        for (var j in _this2.state) {
-          childProps[j] = _this2.state[j];
-        }
         return React.cloneElement(child, childProps);
       });
     }

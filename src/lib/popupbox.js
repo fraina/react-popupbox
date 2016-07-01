@@ -1,5 +1,5 @@
 import React, { Component, cloneElement } from 'react';
-import { get, merge } from 'lodash';
+import { get, merge, isEqual } from 'lodash';
 import classNames from 'classnames';
 
 export class PopModal extends Component {
@@ -19,7 +19,7 @@ export class PopModal extends Component {
   }
 
   onKeyDown(e) {
-    if ((this.props.display) && (e.keyCode === 27)){
+    if ((this.props.display) && (e.keyCode === 27)) {
       this.props.closePopupbox();
     }
   }
@@ -33,6 +33,10 @@ export class PopModal extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (!isEqual(this.props.titleBar, nextProps.titleBar)) {
+      this.state = merge({}, this.state, nextProps.titleBar);
+    }
+
     if (this.props.show !== nextProps.show) {
       this.cleanUp();
 
