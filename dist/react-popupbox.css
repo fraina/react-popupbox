@@ -62,7 +62,7 @@
 .popupbox[data-title='bottom'] .popupbox-content { order: 1 }
 .popupbox[data-title='bottom'] .popupbox-titleBar { order: 2 }
 
-// ----- default theme ----- //
+/* ----- default theme ----- */
 
 .popupbox-wrapper {
   border-radius: 3px;
