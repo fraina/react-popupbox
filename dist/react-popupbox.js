@@ -63,6 +63,18 @@ var inherits = function (subClass, superClass) {
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
 
+var objectWithoutProperties = function (obj, keys) {
+  var target = {};
+
+  for (var i in obj) {
+    if (keys.indexOf(i) >= 0) continue;
+    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
+    target[i] = obj[i];
+  }
+
+  return target;
+};
+
 var possibleConstructorReturn = function (self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -240,17 +252,13 @@ var PopTrigger = function (_Component2) {
   createClass(PopTrigger, [{
     key: 'render',
     value: function render() {
-      var _this4 = this;
+      var _props4 = this.props;
+      var children = _props4.children;
+      var openPopupbox = _props4.openPopupbox;
 
       var childProps = {};
-      Object.keys(this.props).map(function (key) {
-        if (key !== 'children' && key !== 'openPopupbox' && key !== 'className') {
-          childProps[key] = _this4.props[key];
-        } else if (key === 'openPopupbox') {
-          childProps['onClick'] = _this4.props[key];
-        }
-      });
-      return React.cloneElement(this.props.children, childProps);
+      childProps['onClick'] = openPopupbox;
+      return React.cloneElement(children, childProps);
     }
   }]);
   return PopTrigger;
@@ -303,12 +311,17 @@ var Popupbox = function (_Component) {
       var children = this.props.children;
 
       var childrenSource = children.length > 1 ? children : new Array(children);
+      var _state = this.state;
+      var titleBar = _state.titleBar;
+      var rest = objectWithoutProperties(_state, ['titleBar']);
+
       return childrenSource.map(function (child, index) {
         var childProps = _extends({
           key: index,
           openPopupbox: _this2.openPopupbox.bind(_this2),
-          closePopupbox: _this2.closePopupbox.bind(_this2)
-        }, _this2.state);
+          closePopupbox: _this2.closePopupbox.bind(_this2),
+          titleBar: titleBar
+        }, rest);
         return React.cloneElement(child, childProps);
       });
     }

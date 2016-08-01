@@ -36,12 +36,14 @@ export class Popupbox extends Component {
   renderChildren() {
     const { children } = this.props;
     const childrenSource = (children.length > 1) ? children : new Array(children);
+    const { titleBar, ...rest } = this.state;
     return childrenSource.map((child, index) => {
       const childProps = {
         key: index,
         openPopupbox: this.openPopupbox.bind(this),
         closePopupbox: this.closePopupbox.bind(this),
-        ...this.state
+        titleBar,
+        ...rest
       }
       return cloneElement(child, childProps);
     })

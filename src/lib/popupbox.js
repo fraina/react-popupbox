@@ -119,14 +119,9 @@ export class PopModal extends Component {
 
 export class PopTrigger extends Component {
   render() {
+    const { children, openPopupbox } = this.props;
     const childProps = {};
-    Object.keys(this.props).map((key) => {
-      if (key !== 'children' && key !== 'openPopupbox' && key !== 'className') {
-        childProps[key] = this.props[key];
-      } else if (key === 'openPopupbox') {
-        childProps['onClick'] = this.props[key];
-      }
-    })
-    return cloneElement(this.props.children, childProps);
+    childProps['onClick'] = openPopupbox;
+    return cloneElement(children, childProps);
   }
 }
