@@ -8,6 +8,7 @@ var React = require('react');
 var React__default = _interopDefault(React);
 var lodash = require('lodash');
 var classNames = _interopDefault(require('classnames'));
+var events = require('events');
 
 var classCallCheck = function (instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -33,20 +34,6 @@ var createClass = function () {
   };
 }();
 
-var _extends = Object.assign || function (target) {
-  for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i];
-
-    for (var key in source) {
-      if (Object.prototype.hasOwnProperty.call(source, key)) {
-        target[key] = source[key];
-      }
-    }
-  }
-
-  return target;
-};
-
 var inherits = function (subClass, superClass) {
   if (typeof superClass !== "function" && superClass !== null) {
     throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
@@ -63,18 +50,6 @@ var inherits = function (subClass, superClass) {
   if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 };
 
-var objectWithoutProperties = function (obj, keys) {
-  var target = {};
-
-  for (var i in obj) {
-    if (keys.indexOf(i) >= 0) continue;
-    if (!Object.prototype.hasOwnProperty.call(obj, i)) continue;
-    target[i] = obj[i];
-  }
-
-  return target;
-};
-
 var possibleConstructorReturn = function (self, call) {
   if (!self) {
     throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
@@ -83,33 +58,131 @@ var possibleConstructorReturn = function (self, call) {
   return call && (typeof call === "object" || typeof call === "function") ? call : self;
 };
 
-var PopModal = function (_Component) {
-  inherits(PopModal, _Component);
+var Constants = {
+  OPEN: 'open',
+  CLOSE: 'close',
+  CHANGE: 'change'
+};
 
-  function PopModal(props) {
-    classCallCheck(this, PopModal);
+var Manager = function (_EventEmitter) {
+  inherits(Manager, _EventEmitter);
 
-    var _this = possibleConstructorReturn(this, Object.getPrototypeOf(PopModal).call(this, props));
+  function Manager() {
+    classCallCheck(this, Manager);
 
-    var defaultConfig = {
-      enable: false,
-      closeButton: true,
-      closeText: '✕',
-      position: 'top'
-    };
+    var _this = possibleConstructorReturn(this, (Manager.__proto__ || Object.getPrototypeOf(Manager)).call(this));
 
-    _this.state = lodash.merge({}, defaultConfig, _this.props.titleBar, {
-      callback: {}
-    });
+    _this.content = null;
+    _this.config = {};
+    _this.show = false;
+
+    _this._defaultConfig = null;
     return _this;
   }
 
-  createClass(PopModal, [{
+  createClass(Manager, [{
+    key: 'setDefault',
+    value: function setDefault(defaultConfig) {
+      this._defaultConfig = defaultConfig;
+    }
+  }, {
+    key: 'open',
+    value: function open(params) {
+      var content = params.content;
+      var config = params.config;
+
+      this.content = content || null;
+      this.config = config || this._defaultConfig;
+      this.show = true;
+      this.emitChange();
+    }
+  }, {
+    key: 'close',
+    value: function close() {
+      this.show = false;
+      this.emitChange();
+    }
+  }, {
+    key: 'emitChange',
+    value: function emitChange() {
+      this.emit(Constants.CHANGE, {
+        children: this.content,
+        config: this.config,
+        show: this.show
+      });
+    }
+  }, {
+    key: 'addChangeListener',
+    value: function addChangeListener(callback) {
+      this.addListener(Constants.CHANGE, callback);
+    }
+  }, {
+    key: 'removeChangeListener',
+    value: function removeChangeListener(callback) {
+      this.removeListener(Constants.CHANGE, callback);
+    }
+  }]);
+  return Manager;
+}(events.EventEmitter);
+
+var Manager$1 = new Manager();
+
+var Container = function (_Component) {
+  inherits(Container, _Component);
+
+  function Container(props) {
+    classCallCheck(this, Container);
+
+    var _this = possibleConstructorReturn(this, (Container.__proto__ || Object.getPrototypeOf(Container)).call(this, props));
+
+    _this._defaultState = _this.getConfig();
+    _this.state = _this._defaultState;
+    Manager$1.setDefault(_this._defaultState);
+
+    _this.handleStoreChange = _this.handleStoreChange.bind(_this);
+    _this.closeImagebox = Manager$1.close.bind(Manager$1);
+    return _this;
+  }
+
+  createClass(Container, [{
+    key: 'getConfig',
+    value: function getConfig() {
+      var params = arguments.length <= 0 || arguments[0] === undefined ? this.props : arguments[0];
+
+      var defaultConfig = {
+        overlayOpacity: 0.75,
+        show: false,
+        fadeIn: false,
+        fadeInSpeed: 500,
+        fadeOut: true,
+        fadeOutSpeed: 500
+      };
+
+      var defaultTitlebarConfig = {
+        enable: false,
+        closeButton: true,
+        closeText: '✕',
+        position: 'top'
+      };
+
+      if (!params) return lodash.merge({}, defaultConfig, defaultTitlebarConfig);
+      var _config = lodash.merge({}, defaultConfig, lodash.omit(params, ['children', 'lightbox']));
+      return lodash.merge({}, _config, defaultTitlebarConfig, params.titleBar, {
+        children: null,
+        callback: {}
+      });
+    }
+  }, {
     key: 'onKeyDown',
     value: function onKeyDown(e) {
-      if (this.props.display && e.keyCode === 27) {
-        this.props.closePopupbox();
+      if (this.state.show && e.keyCode === 27) {
+        this.closeImagebox();
       }
+    }
+  }, {
+    key: 'componentWillMount',
+    value: function componentWillMount() {
+      Manager$1.addChangeListener(this.handleStoreChange);
     }
   }, {
     key: 'componentDidMount',
@@ -120,52 +193,64 @@ var PopModal = function (_Component) {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       document.removeEventListener('keydown', this.onKeyDown.bind(this));
+      Manager$1.removeChangeListener(this.handleStoreChange);
     }
   }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
+    key: 'handleStoreChange',
+    value: function handleStoreChange(params) {
       var _this2 = this;
 
-      if (!lodash.isEqual(this.props.titleBar, nextProps.titleBar)) {
-        this.state = lodash.merge({}, this.state, nextProps.titleBar);
-      }
+      var children = params.children;
+      var show = params.show;
+      var config = params.config;
 
-      if (this.props.show !== nextProps.show) {
+
+      if (this.state.show !== show) {
         this.cleanUp();
 
-        var fadeIn = nextProps.fadeIn;
-        var fadeOut = nextProps.fadeOut;
+        var currentConfig = this.getConfig(config);
+        var fadeIn = currentConfig.fadeIn;
+        var fadeInSpeed = currentConfig.fadeInSpeed;
+        var fadeOut = currentConfig.fadeOut;
+        var fadeOutSpeed = currentConfig.fadeOutSpeed;
 
-        if (nextProps.show) {
+        if (show) {
           (function () {
             var _props = _this2.props;
-            var onOpen = _props.onOpen;
             var onComplete = _props.onComplete;
+            var onOpen = _props.onOpen;
 
-            onOpen && onOpen();
-            _this2.setState({
-              transition: fadeIn ? 'all ' + lodash.get(nextProps, 'fadeInSpeed', 1000) / 1000 + 's' : 'none',
+            _this2.setState(lodash.merge({}, currentConfig, {
+              children: children,
+              show: true,
+              transition: fadeIn ? 'all ' + fadeInSpeed / 1000 + 's ease-in-out' : 'none',
               callback: setTimeout(function () {
                 onComplete && onComplete();
-              }, lodash.get(nextProps, 'fadeInSpeed', 0) + 1)
-            });
+              }, fadeInSpeed + 1)
+            }));
+            onOpen && onOpen();
           })();
         } else {
-          (function () {
-            var _props2 = _this2.props;
-            var onCleanup = _props2.onCleanup;
-            var onClosed = _props2.onClosed;
+          var onCleanUp = this.props.onCleanUp;
 
-            onCleanup && onCleanup();
-            _this2.setState({
-              transition: fadeOut ? 'all ' + lodash.get(nextProps, 'fadeOutSpeed', 1000) / 1000 + 's' : 'none',
-              callback: setTimeout(function () {
-                onClosed && onClosed();
-              }, lodash.get(nextProps, 'fadeOutSpeed', 0) + 1)
-            });
-          })();
+          onCleanUp && onCleanUp();
+          this.setState({
+            show: false,
+            transition: fadeOut ? 'all ' + fadeOutSpeed / 1000 + 's ease-in-out' : 'none',
+            callback: setTimeout(function () {
+              _this2.onClosed();
+            }, fadeOutSpeed + 1)
+          });
         }
       }
+    }
+  }, {
+    key: 'onClosed',
+    value: function onClosed() {
+      var onClosed = this.props.onClosed;
+
+      onClosed && onClosed();
+      this.setState(this._defaultState);
     }
   }, {
     key: 'cleanUp',
@@ -181,7 +266,6 @@ var PopModal = function (_Component) {
       var closeText = _state.closeText;
       var closeButton = _state.closeButton;
       var closeButtonClassName = _state.closeButtonClassName;
-      var closePopupbox = this.props.closePopupbox;
 
 
       var titleBarClass = {};
@@ -200,7 +284,7 @@ var PopModal = function (_Component) {
         closeButton && React__default.createElement(
           'button',
           {
-            onClick: closePopupbox,
+            onClick: this.closeImagebox,
             className: classNames('popupbox-btn--close', closeButtonClassName) },
           closeText
         )
@@ -210,20 +294,20 @@ var PopModal = function (_Component) {
     key: 'render',
     value: function render() {
       var titleBar = this.state;
-      var _props3 = this.props;
-      var overlayOpacity = _props3.overlayOpacity;
-      var show = _props3.show;
-      var children = _props3.children;
-      var closePopupbox = _props3.closePopupbox;
-      var className = _props3.className;
+      var _state2 = this.state;
+      var overlayOpacity = _state2.overlayOpacity;
+      var show = _state2.show;
+      var children = _state2.children;
+      var className = _state2.className;
 
 
       return React__default.createElement(
         'div',
-        { 'data-type': 'popup',
+        {
           'data-title': titleBar.enable ? titleBar.position : null,
           style: { transition: this.state.transition },
-          className: classNames('popupbox', { 'is-active': show }) },
+          className: classNames('popupbox', { 'is-active': show })
+        },
         React__default.createElement(
           'div',
           { className: classNames('popupbox-wrapper', className) },
@@ -234,110 +318,15 @@ var PopModal = function (_Component) {
             children
           )
         ),
-        React__default.createElement('div', { className: 'popupbox-overlay', style: { opacity: overlayOpacity }, onClick: closePopupbox })
+        React__default.createElement('div', { className: 'popupbox-overlay', style: { opacity: overlayOpacity }, onClick: this.closeImagebox })
       );
     }
   }]);
-  return PopModal;
+  return Container;
 }(React.Component);
 
-var PopTrigger = function (_Component2) {
-  inherits(PopTrigger, _Component2);
+var PopupboxContainer = Container;
+var PopupboxManager = Manager$1;
 
-  function PopTrigger() {
-    classCallCheck(this, PopTrigger);
-    return possibleConstructorReturn(this, Object.getPrototypeOf(PopTrigger).apply(this, arguments));
-  }
-
-  createClass(PopTrigger, [{
-    key: 'render',
-    value: function render() {
-      var _props4 = this.props;
-      var children = _props4.children;
-      var openPopupbox = _props4.openPopupbox;
-
-      var childProps = {};
-      childProps['onClick'] = openPopupbox;
-      return React.cloneElement(children, childProps);
-    }
-  }]);
-  return PopTrigger;
-}(React.Component);
-
-var PopupboxModal = PopModal;
-var PopupboxTrigger = PopTrigger;
-
-var Popupbox = function (_Component) {
-  inherits(Popupbox, _Component);
-
-  function Popupbox(props) {
-    classCallCheck(this, Popupbox);
-
-    var _this = possibleConstructorReturn(this, Object.getPrototypeOf(Popupbox).call(this, props));
-
-    var defaultConfig = {
-      overlayOpacity: 0.75,
-      show: false,
-      fadeIn: false,
-      fadeInSpeed: 500,
-      fadeOut: true,
-      fadeOutSpeed: 500
-    };
-
-    _this.state = lodash.merge({}, defaultConfig, lodash.omit(_this.props, 'children'));
-    return _this;
-  }
-
-  createClass(Popupbox, [{
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      this.state = lodash.merge({}, this.state, lodash.omit(nextProps, 'children'));
-    }
-  }, {
-    key: 'openPopupbox',
-    value: function openPopupbox() {
-      this.setState({ show: true });
-    }
-  }, {
-    key: 'closePopupbox',
-    value: function closePopupbox() {
-      this.setState({ show: false });
-    }
-  }, {
-    key: 'renderChildren',
-    value: function renderChildren() {
-      var _this2 = this;
-
-      var children = this.props.children;
-
-      var childrenSource = children.length > 1 ? children : new Array(children);
-      var _state = this.state;
-      var titleBar = _state.titleBar;
-      var rest = objectWithoutProperties(_state, ['titleBar']);
-
-      return childrenSource.map(function (child, index) {
-        var childProps = _extends({
-          key: index,
-          openPopupbox: _this2.openPopupbox.bind(_this2),
-          closePopupbox: _this2.closePopupbox.bind(_this2),
-          titleBar: titleBar
-        }, rest);
-        return React.cloneElement(child, childProps);
-      });
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      return React__default.createElement(
-        'div',
-        null,
-        this.renderChildren()
-      );
-    }
-  }]);
-  return Popupbox;
-}(React.Component);
-
-exports.PopupboxModal = PopupboxModal;
-exports.PopupboxTrigger = PopupboxTrigger;
-exports.Popupbox = Popupbox;
+exports.PopupboxContainer = PopupboxContainer;
+exports.PopupboxManager = PopupboxManager;
