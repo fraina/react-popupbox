@@ -1,0 +1,10 @@
+Thumbs.db
+.DS_Store
+*~
+*.log
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.stTheme.cache
+*.sublime-workspace
+node_modules/
+build/

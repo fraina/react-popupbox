@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { merge, omit } from 'lodash';
-import classNames from 'classnames';
 import Manager from './manager';
 
 export class Container extends Component {
@@ -32,9 +30,14 @@ export class Container extends Component {
       position: 'top'
     }
 
-    if (!params) return merge({}, defaultConfig, defaultTitlebarConfig);
-    const _config = merge({}, defaultConfig, omit(params, [ 'children', 'lightbox' ]))
-    return merge({}, _config, defaultTitlebarConfig, params.titleBar, {
+    if (!params) return Object.assign({}, defaultConfig, defaultTitlebarConfig);
+    const _config = Object.assign({}, defaultConfig, (() => {
+      const ret = params
+      delete ret.children
+      delete ret.lightbox
+      return ret
+    })())
+    return Object.assign({}, _config, defaultTitlebarConfig, params.titleBar, {
       children: null,
       callback: {}
     });
@@ -69,7 +72,7 @@ export class Container extends Component {
       const { fadeIn, fadeInSpeed, fadeOut, fadeOutSpeed } = currentConfig;
       if (show) {
         const { onComplete, onOpen } = this.props;
-        this.setState(merge({}, currentConfig, {
+        this.setState(Object.assign({}, currentConfig, {
           children: children,
           show: true,
           transition: (fadeIn) ? `all ${fadeInSpeed / 1000}s ease-in-out` : 'none',
@@ -111,12 +114,12 @@ export class Container extends Component {
     }
 
     return (
-      <div className={ classNames('popupbox-titleBar', titleBarClass) }>
+      <div className={`popupbox-titleBar ${titleBarClass}`}>
         <span>{ (text && text.length) ? text : <br /> }</span>
         { closeButton &&
           <button
             onClick={this.closeImagebox}
-            className={classNames('popupbox-btn--close', closeButtonClassName)}>
+            className={`popupbox-btn--close ${closeButtonClassName}`}>
             { closeText }
           </button>
         }
@@ -137,9 +140,9 @@ export class Container extends Component {
       <div
         data-title={ (titleBar.enable) ? titleBar.position : null }
         style={{ transition: this.state.transition }}
-        className={ classNames('popupbox', { 'is-active': show }) }
+        className={`popupbox ${show && 'is-active'}`}
       >
-        <div className={ classNames('popupbox-wrapper', className)}>
+        <div className={`popupbox-wrapper ${className}`}>
           { titleBar.enable && this.renderTitleBar() }
           <div className="popupbox-content">
             { children }
