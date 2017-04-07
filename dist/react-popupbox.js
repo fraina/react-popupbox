@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 20);
+/******/ 	return __webpack_require__(__webpack_require__.s = 21);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -422,7 +422,7 @@ var warning = __webpack_require__(1);
 var canDefineProperty = __webpack_require__(13);
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
-var REACT_ELEMENT_TYPE = __webpack_require__(16);
+var REACT_ELEMENT_TYPE = __webpack_require__(17);
 
 var RESERVED_PROPS = {
   key: true,
@@ -1681,6 +1681,12 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _events = __webpack_require__(22);
 
+var _deepmerge = __webpack_require__(16);
+
+var _deepmerge2 = _interopRequireDefault(_deepmerge);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -1706,6 +1712,10 @@ var Manager = function (_EventEmitter) {
     _this.show = false;
 
     _this._defaultConfig = null;
+
+    _this.open = _this.open.bind(_this);
+    _this.update = _this.update.bind(_this);
+    _this.close = _this.close.bind(_this);
     return _this;
   }
 
@@ -1716,13 +1726,32 @@ var Manager = function (_EventEmitter) {
     }
   }, {
     key: 'open',
-    value: function open(params) {
-      var content = params.content,
-          config = params.config;
+    value: function open(_ref) {
+      var _ref$content = _ref.content,
+          content = _ref$content === undefined ? null : _ref$content,
+          _ref$config = _ref.config,
+          config = _ref$config === undefined ? {} : _ref$config;
+
+      if (!content) {
+        console.warn('[popupbox.open] parameter \'content\' is required.');
+        return false;
+      }
 
       this.content = content || null;
       this.config = config || this._defaultConfig;
       this.show = true;
+      this.emitChange();
+    }
+  }, {
+    key: 'update',
+    value: function update(_ref2) {
+      var _ref2$content = _ref2.content,
+          content = _ref2$content === undefined ? null : _ref2$content,
+          _ref2$config = _ref2.config,
+          config = _ref2$config === undefined ? {} : _ref2$config;
+
+      this.content = content || this.content;
+      this.config = (0, _deepmerge2.default)(this.config, config);
       this.emitChange();
     }
   }, {
@@ -1761,6 +1790,100 @@ exports.default = new Manager();
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;(function (root, factory) {
+    if (true) {
+        !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+    } else if (typeof exports === 'object') {
+        module.exports = factory();
+    } else {
+        root.deepmerge = factory();
+    }
+}(this, function () {
+
+function isMergeableObject(val) {
+    var nonNullObject = val && typeof val === 'object'
+
+    return nonNullObject
+        && Object.prototype.toString.call(val) !== '[object RegExp]'
+        && Object.prototype.toString.call(val) !== '[object Date]'
+}
+
+function emptyTarget(val) {
+    return Array.isArray(val) ? [] : {}
+}
+
+function cloneIfNecessary(value, optionsArgument) {
+    var clone = optionsArgument && optionsArgument.clone === true
+    return (clone && isMergeableObject(value)) ? deepmerge(emptyTarget(value), value, optionsArgument) : value
+}
+
+function defaultArrayMerge(target, source, optionsArgument) {
+    var destination = target.slice()
+    source.forEach(function(e, i) {
+        if (typeof destination[i] === 'undefined') {
+            destination[i] = cloneIfNecessary(e, optionsArgument)
+        } else if (isMergeableObject(e)) {
+            destination[i] = deepmerge(target[i], e, optionsArgument)
+        } else if (target.indexOf(e) === -1) {
+            destination.push(cloneIfNecessary(e, optionsArgument))
+        }
+    })
+    return destination
+}
+
+function mergeObject(target, source, optionsArgument) {
+    var destination = {}
+    if (isMergeableObject(target)) {
+        Object.keys(target).forEach(function (key) {
+            destination[key] = cloneIfNecessary(target[key], optionsArgument)
+        })
+    }
+    Object.keys(source).forEach(function (key) {
+        if (!isMergeableObject(source[key]) || !target[key]) {
+            destination[key] = cloneIfNecessary(source[key], optionsArgument)
+        } else {
+            destination[key] = deepmerge(target[key], source[key], optionsArgument)
+        }
+    })
+    return destination
+}
+
+function deepmerge(target, source, optionsArgument) {
+    var array = Array.isArray(source);
+    var options = optionsArgument || { arrayMerge: defaultArrayMerge }
+    var arrayMerge = options.arrayMerge || defaultArrayMerge
+
+    if (array) {
+        return Array.isArray(target) ? arrayMerge(target, source, optionsArgument) : cloneIfNecessary(source, optionsArgument)
+    } else {
+        return mergeObject(target, source, optionsArgument)
+    }
+}
+
+deepmerge.all = function deepmergeAll(array, optionsArgument) {
+    if (!Array.isArray(array) || array.length < 2) {
+        throw new Error('first argument should be an array with at least two elements')
+    }
+
+    // we are sure there are at least 2 values, so it is safe to have no initial value
+    return array.reduce(function(prev, next) {
+        return deepmerge(prev, next, optionsArgument)
+    })
+}
+
+return deepmerge
+
+}));
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 /**
  * Copyright 2014-present, Facebook, Inc.
@@ -1783,7 +1906,7 @@ var REACT_ELEMENT_TYPE = typeof Symbol === 'function' && Symbol['for'] && Symbol
 module.exports = REACT_ELEMENT_TYPE;
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2023,7 +2146,7 @@ module.exports = ReactElementValidator;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2045,7 +2168,7 @@ var ReactPropTypesSecret = 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED';
 module.exports = ReactPropTypesSecret;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2062,13 +2185,13 @@ var _react = __webpack_require__(35);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _classnames = __webpack_require__(21);
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
 var _manager = __webpack_require__(15);
 
 var _manager2 = _interopRequireDefault(_manager);
+
+var _deepmerge = __webpack_require__(16);
+
+var _deepmerge2 = _interopRequireDefault(_deepmerge);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2116,17 +2239,20 @@ var Container = exports.Container = function (_Component) {
         position: 'top'
       };
 
-      if (!params) return Object.assign({}, defaultConfig, defaultTitlebarConfig);
-      var _config = Object.assign({}, defaultConfig, function () {
+      if (!params) return (0, _deepmerge2.default)(defaultConfig, defaultTitlebarConfig);
+
+      var cleanUpParams = function () {
         var ret = params;
         delete ret.children;
         delete ret.lightbox;
         return ret;
-      }());
-      return Object.assign({}, _config, defaultTitlebarConfig, params.titleBar, {
-        children: null,
-        callback: {}
-      });
+      }();
+
+      var _mergedConfig = (0, _deepmerge2.default)(defaultConfig, params);
+      var _mergedTitlebarConfig = (0, _deepmerge2.default)(defaultTitlebarConfig, params.titleBar || {});
+
+      delete _mergedConfig.titleBar;
+      return (0, _deepmerge2.default)(_mergedConfig, _mergedTitlebarConfig);
     }
   }, {
     key: 'onKeyDown',
@@ -2156,46 +2282,44 @@ var Container = exports.Container = function (_Component) {
     value: function handleStoreChange(params) {
       var _this2 = this;
 
+      this.cleanUp();
+
       var children = params.children,
           show = params.show,
           config = params.config;
 
+      var currentConfig = this.getConfig(config);
+      var fadeIn = currentConfig.fadeIn,
+          fadeInSpeed = currentConfig.fadeInSpeed,
+          fadeOut = currentConfig.fadeOut,
+          fadeOutSpeed = currentConfig.fadeOutSpeed;
 
-      if (this.state.show !== show) {
-        this.cleanUp();
 
-        var currentConfig = this.getConfig(config);
-        var fadeIn = currentConfig.fadeIn,
-            fadeInSpeed = currentConfig.fadeInSpeed,
-            fadeOut = currentConfig.fadeOut,
-            fadeOutSpeed = currentConfig.fadeOutSpeed;
+      if (show) {
+        var _props = this.props,
+            onComplete = _props.onComplete,
+            onOpen = _props.onOpen;
 
-        if (show) {
-          var _props = this.props,
-              onComplete = _props.onComplete,
-              onOpen = _props.onOpen;
+        this.setState((0, _deepmerge2.default)(currentConfig, {
+          children: children,
+          show: true,
+          transition: fadeIn ? 'all ' + fadeInSpeed / 1000 + 's ease-in-out' : 'none',
+          callback: setTimeout(function () {
+            onComplete && onComplete();
+          }, fadeInSpeed + 1)
+        }));
+        onOpen && onOpen();
+      } else {
+        var onCleanUp = this.props.onCleanUp;
 
-          this.setState(Object.assign({}, currentConfig, {
-            children: children,
-            show: true,
-            transition: fadeIn ? 'all ' + fadeInSpeed / 1000 + 's ease-in-out' : 'none',
-            callback: setTimeout(function () {
-              onComplete && onComplete();
-            }, fadeInSpeed + 1)
-          }));
-          onOpen && onOpen();
-        } else {
-          var onCleanUp = this.props.onCleanUp;
-
-          onCleanUp && onCleanUp();
-          this.setState({
-            show: false,
-            transition: fadeOut ? 'all ' + fadeOutSpeed / 1000 + 's ease-in-out' : 'none',
-            callback: setTimeout(function () {
-              _this2.onClosed();
-            }, fadeOutSpeed + 1)
-          });
-        }
+        onCleanUp && onCleanUp();
+        this.setState({
+          show: false,
+          transition: fadeOut ? 'all ' + fadeOutSpeed / 1000 + 's ease-in-out' : 'none',
+          callback: setTimeout(function () {
+            _this2.onClosed();
+          }, fadeOutSpeed + 1)
+        });
       }
     }
   }, {
@@ -2229,7 +2353,7 @@ var Container = exports.Container = function (_Component) {
 
       return _react2.default.createElement(
         'div',
-        { className: (0, _classnames2.default)('popupbox-titleBar', titleBarClass) },
+        { className: 'popupbox-titleBar ' + titleBarClass },
         _react2.default.createElement(
           'span',
           null,
@@ -2239,7 +2363,7 @@ var Container = exports.Container = function (_Component) {
           'button',
           {
             onClick: this.closeImagebox,
-            className: (0, _classnames2.default)('popupbox-btn--close', closeButtonClassName) },
+            className: 'popupbox-btn--close ' + closeButtonClassName },
           closeText
         )
       );
@@ -2260,11 +2384,11 @@ var Container = exports.Container = function (_Component) {
         {
           'data-title': titleBar.enable ? titleBar.position : null,
           style: { transition: this.state.transition },
-          className: (0, _classnames2.default)('popupbox', { 'is-active': show })
+          className: 'popupbox ' + (show && 'is-active')
         },
         _react2.default.createElement(
           'div',
-          { className: (0, _classnames2.default)('popupbox-wrapper', className) },
+          { className: 'popupbox-wrapper ' + className },
           titleBar.enable && this.renderTitleBar(),
           _react2.default.createElement(
             'div',
@@ -2281,7 +2405,7 @@ var Container = exports.Container = function (_Component) {
 }(_react.Component);
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2292,7 +2416,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.PopupboxManager = exports.PopupboxContainer = undefined;
 
-var _container = __webpack_require__(19);
+var _container = __webpack_require__(20);
 
 var _manager = __webpack_require__(15);
 
@@ -2302,61 +2426,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var PopupboxContainer = exports.PopupboxContainer = _container.Container;
 var PopupboxManager = exports.PopupboxManager = _manager2.default;
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-  Copyright (c) 2016 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
-*/
-/* global define */
-
-(function () {
-	'use strict';
-
-	var hasOwn = {}.hasOwnProperty;
-
-	function classNames () {
-		var classes = [];
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (!arg) continue;
-
-			var argType = typeof arg;
-
-			if (argType === 'string' || argType === 'number') {
-				classes.push(arg);
-			} else if (Array.isArray(arg)) {
-				classes.push(classNames.apply(null, arg));
-			} else if (argType === 'object') {
-				for (var key in arg) {
-					if (hasOwn.call(arg, key) && arg[key]) {
-						classes.push(key);
-					}
-				}
-			}
-		}
-
-		return classes.join(' ');
-	}
-
-	if (typeof module !== 'undefined' && module.exports) {
-		module.exports = classNames;
-	} else if (true) {
-		// register as 'classnames', consistent with npm package name
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
-			return classNames;
-		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	} else {
-		window.classNames = classNames;
-	}
-}());
-
 
 /***/ }),
 /* 22 */
@@ -2884,7 +2953,7 @@ var createFactory = ReactElement.createFactory;
 var cloneElement = ReactElement.cloneElement;
 
 if (process.env.NODE_ENV !== 'production') {
-  var ReactElementValidator = __webpack_require__(17);
+  var ReactElementValidator = __webpack_require__(18);
   createElement = ReactElementValidator.createElement;
   createFactory = ReactElementValidator.createFactory;
   cloneElement = ReactElementValidator.cloneElement;
@@ -3888,7 +3957,7 @@ var ReactElement = __webpack_require__(3);
  */
 var createDOMFactory = ReactElement.createFactory;
 if (process.env.NODE_ENV !== 'production') {
-  var ReactElementValidator = __webpack_require__(17);
+  var ReactElementValidator = __webpack_require__(18);
   createDOMFactory = ReactElementValidator.createFactory;
 }
 
@@ -4057,7 +4126,7 @@ module.exports = ReactDOMFactories;
 
 var ReactElement = __webpack_require__(3);
 var ReactPropTypeLocationNames = __webpack_require__(12);
-var ReactPropTypesSecret = __webpack_require__(18);
+var ReactPropTypesSecret = __webpack_require__(19);
 
 var emptyFunction = __webpack_require__(7);
 var getIteratorFn = __webpack_require__(14);
@@ -4564,7 +4633,7 @@ module.exports = '15.4.2';
 var _prodInvariant = __webpack_require__(4);
 
 var ReactPropTypeLocationNames = __webpack_require__(12);
-var ReactPropTypesSecret = __webpack_require__(18);
+var ReactPropTypesSecret = __webpack_require__(19);
 
 var invariant = __webpack_require__(2);
 var warning = __webpack_require__(1);
@@ -4701,7 +4770,7 @@ module.exports = onlyChild;
 var _prodInvariant = __webpack_require__(4);
 
 var ReactCurrentOwner = __webpack_require__(6);
-var REACT_ELEMENT_TYPE = __webpack_require__(16);
+var REACT_ELEMENT_TYPE = __webpack_require__(17);
 
 var getIteratorFn = __webpack_require__(14);
 var invariant = __webpack_require__(2);

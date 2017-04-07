@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
-import Manager from './manager';
+import React, { Component } from 'react'
+import Manager from './manager'
+import merge from 'deepmerge'
 
 export class Container extends Component {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this._defaultState = this.getConfig();
-    this.state = this._defaultState;
-    Manager.setDefault(this._defaultState);
+    this._defaultState = this.getConfig()
+    this.state = this._defaultState
+    Manager.setDefault(this._defaultState)
 
-    this.handleStoreChange = this.handleStoreChange.bind(this);
-    this.closeImagebox = Manager.close.bind(Manager);
+    this.handleStoreChange = this.handleStoreChange.bind(this)
+    this.closeImagebox = Manager.close.bind(Manager)
   }
 
   getConfig(params = this.props) {
@@ -21,7 +22,7 @@ export class Container extends Component {
       fadeInSpeed: 500,
       fadeOut: true,
       fadeOutSpeed: 500
-    };
+    }
 
     const defaultTitlebarConfig = {
       enable: false,
@@ -30,87 +31,88 @@ export class Container extends Component {
       position: 'top'
     }
 
-    if (!params) return Object.assign({}, defaultConfig, defaultTitlebarConfig);
-    const _config = Object.assign({}, defaultConfig, (() => {
+    if (!params) return merge(defaultConfig, defaultTitlebarConfig)
+
+    const cleanUpParams = (() => {
       const ret = params
       delete ret.children
       delete ret.lightbox
       return ret
-    })())
-    return Object.assign({}, _config, defaultTitlebarConfig, params.titleBar, {
-      children: null,
-      callback: {}
-    });
+    })()
+
+    const _mergedConfig = merge(defaultConfig, params)
+    const _mergedTitlebarConfig = merge(defaultTitlebarConfig, params.titleBar || {})
+
+    delete _mergedConfig.titleBar
+    return merge(_mergedConfig, _mergedTitlebarConfig)
   }
 
   onKeyDown(e) {
     if ((this.state.show) && (e.keyCode === 27)) {
-      this.closeImagebox();
+      this.closeImagebox()
     }
   }
 
   componentWillMount() {
-    Manager.addChangeListener(this.handleStoreChange);
+    Manager.addChangeListener(this.handleStoreChange)
   }
 
   componentDidMount() {
-    document.addEventListener('keydown', this.onKeyDown.bind(this));
+    document.addEventListener('keydown', this.onKeyDown.bind(this))
   }
 
   componentWillUnmount() {
-    document.removeEventListener('keydown', this.onKeyDown.bind(this));
-    Manager.removeChangeListener(this.handleStoreChange);
+    document.removeEventListener('keydown', this.onKeyDown.bind(this))
+    Manager.removeChangeListener(this.handleStoreChange)
   }
 
   handleStoreChange(params) {
-    const { children, show, config } = params;
+    this.cleanUp()
 
-    if (this.state.show !== show) {
-      this.cleanUp();
+    const { children, show, config } = params
+    const currentConfig = this.getConfig(config)
+    const { fadeIn, fadeInSpeed, fadeOut, fadeOutSpeed } = currentConfig
 
-      const currentConfig = this.getConfig(config);
-      const { fadeIn, fadeInSpeed, fadeOut, fadeOutSpeed } = currentConfig;
-      if (show) {
-        const { onComplete, onOpen } = this.props;
-        this.setState(Object.assign({}, currentConfig, {
-          children: children,
-          show: true,
-          transition: (fadeIn) ? `all ${fadeInSpeed / 1000}s ease-in-out` : 'none',
-          callback: setTimeout(() => {
-            onComplete && onComplete();
-          }, fadeInSpeed + 1)
-        }));
-        onOpen && onOpen();
-      } else {
-        const { onCleanUp } = this.props;
-        onCleanUp && onCleanUp();
-        this.setState({
-          show: false,
-          transition: (fadeOut) ? `all ${fadeOutSpeed / 1000}s ease-in-out` : 'none',
-          callback: setTimeout(() => {
-            this.onClosed();
-          }, fadeOutSpeed + 1)
-        })
-      }
+    if (show) {
+      const { onComplete, onOpen } = this.props
+      this.setState(merge(currentConfig, {
+        children: children,
+        show: true,
+        transition: (fadeIn) ? `all ${fadeInSpeed / 1000}s ease-in-out` : 'none',
+        callback: setTimeout(() => {
+          onComplete && onComplete()
+        }, fadeInSpeed + 1)
+      }))
+      onOpen && onOpen()
+    } else {
+      const { onCleanUp } = this.props
+      onCleanUp && onCleanUp()
+      this.setState({
+        show: false,
+        transition: (fadeOut) ? `all ${fadeOutSpeed / 1000}s ease-in-out` : 'none',
+        callback: setTimeout(() => {
+          this.onClosed()
+        }, fadeOutSpeed + 1)
+      })
     }
   }
 
   onClosed() {
-    const { onClosed } = this.props;
-    onClosed && onClosed();
+    const { onClosed } = this.props
+    onClosed && onClosed()
     this.setState(this._defaultState)
   }
 
   cleanUp() {
-    clearTimeout(this.state.callback);
+    clearTimeout(this.state.callback)
   }
 
   renderTitleBar() {
-    const { className, text, closeText, closeButton, closeButtonClassName } = this.state;
+    const { className, text, closeText, closeButton, closeButtonClassName } = this.state
 
-    const titleBarClass = {};
+    const titleBarClass = {}
     if (className) {
-      titleBarClass[className] = titleBarClass;
+      titleBarClass[className] = titleBarClass
     }
 
     return (
@@ -128,13 +130,13 @@ export class Container extends Component {
   }
 
   render() {
-    const titleBar = this.state;
+    const titleBar = this.state
     const {
       overlayOpacity,
       show,
       children,
       className
-    } = this.state;
+    } = this.state
 
     return (
       <div
@@ -150,6 +152,6 @@ export class Container extends Component {
         </div>
         <div className="popupbox-overlay" style={{ opacity: overlayOpacity }} onClick={ this.closeImagebox } />
       </div>
-    );
+    )
   }
 }
