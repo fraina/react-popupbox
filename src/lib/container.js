@@ -21,7 +21,8 @@ export class Container extends Component {
       fadeIn: false,
       fadeInSpeed: 500,
       fadeOut: true,
-      fadeOutSpeed: 500
+      fadeOutSpeed: 500,
+      overlayClose: true
     }
 
     const defaultTitlebarConfig = {
@@ -48,7 +49,7 @@ export class Container extends Component {
   }
 
   onKeyDown(e) {
-    if ((this.state.show) && (e.keyCode === 27)) {
+    if (this.state.show && (e.keyCode === 27)) {
       this.closeImagebox()
     }
   }
@@ -150,7 +151,7 @@ export class Container extends Component {
             { children }
           </div>
         </div>
-        <div className="popupbox-overlay" style={{ opacity: overlayOpacity }} onClick={ this.closeImagebox } />
+        <div className="popupbox-overlay" style={{ opacity: overlayOpacity }} onClick={ this.state.overlayClose && this.closeImagebox } />
       </div>
     )
   }

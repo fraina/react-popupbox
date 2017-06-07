@@ -2229,7 +2229,8 @@ var Container = exports.Container = function (_Component) {
         fadeIn: false,
         fadeInSpeed: 500,
         fadeOut: true,
-        fadeOutSpeed: 500
+        fadeOutSpeed: 500,
+        overlayClose: true
       };
 
       var defaultTitlebarConfig = {
@@ -2396,7 +2397,7 @@ var Container = exports.Container = function (_Component) {
             children
           )
         ),
-        _react2.default.createElement('div', { className: 'popupbox-overlay', style: { opacity: overlayOpacity }, onClick: this.closeImagebox })
+        _react2.default.createElement('div', { className: 'popupbox-overlay', style: { opacity: overlayOpacity }, onClick: this.state.overlayClose && this.closeImagebox })
       );
     }
   }]);
