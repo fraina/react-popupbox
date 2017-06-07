@@ -1,12 +1,12 @@
 CACHE MANIFEST
-# b18c972b1295ac8bd211
+# fafbbaf1cc0db1fcdc71
 
-app-b18c972.js
-app-b18c972.js.map
-cat.jpg
-locales/en-us/translation.json
-locales/zh-tw/translation.json
+app-fafbbaf.js
+app-fafbbaf.js.map
 locales/zh-cn/translation.json
+locales/zh-tw/translation.json
+locales/en-us/translation.json
+cat.jpg
 
 NETWORK:
 *
