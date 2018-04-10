@@ -6,7 +6,7 @@ export class Container extends Component {
   constructor(props) {
     super(props)
 
-    this._defaultState = this.getConfig()
+    this._defaultState = this.getConfig({ params: props, isInit: true })
     this.state = this._defaultState
     Manager.setDefault(this._defaultState)
 
@@ -14,8 +14,8 @@ export class Container extends Component {
     this.closeImagebox = Manager.close.bind(Manager)
   }
 
-  getConfig(params = this.props) {
-    const defaultConfig = {
+  getConfig({ params, isInit }) {
+    const defaultConfig = isInit ? {
       overlayOpacity: 0.75,
       show: false,
       fadeIn: false,
@@ -23,7 +23,7 @@ export class Container extends Component {
       fadeOut: true,
       fadeOutSpeed: 500,
       overlayClose: true
-    }
+    } : this._defaultState
 
     const defaultTitlebarConfig = {
       enable: false,
@@ -71,7 +71,7 @@ export class Container extends Component {
     this.cleanUp()
 
     const { children, show, config } = params
-    const currentConfig = this.getConfig(config)
+    const currentConfig = this.getConfig({ params: config, isInit: false })
     const { fadeIn, fadeInSpeed, fadeOut, fadeOutSpeed } = currentConfig
 
     if (show) {

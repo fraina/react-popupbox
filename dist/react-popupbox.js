@@ -2209,7 +2209,7 @@ var Container = exports.Container = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (Container.__proto__ || Object.getPrototypeOf(Container)).call(this, props));
 
-    _this._defaultState = _this.getConfig();
+    _this._defaultState = _this.getConfig({ params: props, isInit: true });
     _this.state = _this._defaultState;
     _manager2.default.setDefault(_this._defaultState);
 
@@ -2220,10 +2220,11 @@ var Container = exports.Container = function (_Component) {
 
   _createClass(Container, [{
     key: 'getConfig',
-    value: function getConfig() {
-      var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.props;
+    value: function getConfig(_ref) {
+      var params = _ref.params,
+          isInit = _ref.isInit;
 
-      var defaultConfig = {
+      var defaultConfig = isInit ? {
         overlayOpacity: 0.75,
         show: false,
         fadeIn: false,
@@ -2231,7 +2232,7 @@ var Container = exports.Container = function (_Component) {
         fadeOut: true,
         fadeOutSpeed: 500,
         overlayClose: true
-      };
+      } : this._defaultState;
 
       var defaultTitlebarConfig = {
         enable: false,
@@ -2289,7 +2290,7 @@ var Container = exports.Container = function (_Component) {
           show = params.show,
           config = params.config;
 
-      var currentConfig = this.getConfig(config);
+      var currentConfig = this.getConfig({ params: config, isInit: false });
       var fadeIn = currentConfig.fadeIn,
           fadeInSpeed = currentConfig.fadeInSpeed,
           fadeOut = currentConfig.fadeOut,
