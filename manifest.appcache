@@ -1,12 +1,12 @@
 CACHE MANIFEST
-# fafbbaf1cc0db1fcdc71
+# 406572019ae1ac70366b
 
-app-fafbbaf.js
-app-fafbbaf.js.map
-locales/zh-cn/translation.json
-locales/zh-tw/translation.json
+app-4065720.js
+app-4065720.js.map
 locales/en-us/translation.json
+locales/zh-tw/translation.json
 cat.jpg
+locales/zh-cn/translation.json
 
 NETWORK:
 *
