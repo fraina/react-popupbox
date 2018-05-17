@@ -1736,7 +1736,6 @@ var Manager = function (_EventEmitter) {
         console.warn('[popupbox.open] parameter \'content\' is required.');
         return false;
       }
-
       this.content = content || null;
       this.config = config || this._defaultConfig;
       this.show = true;
@@ -2224,24 +2223,23 @@ var Container = exports.Container = function (_Component) {
       var params = _ref.params,
           isInit = _ref.isInit;
 
-      var defaultConfig = isInit ? {
+      var defaultConfig = {
         overlayOpacity: 0.75,
         show: false,
         fadeIn: false,
         fadeInSpeed: 500,
         fadeOut: true,
         fadeOutSpeed: 500,
-        overlayClose: true
-      } : this._defaultState;
-
-      var defaultTitlebarConfig = {
-        enable: false,
-        closeButton: true,
-        closeText: '✕',
-        position: 'top'
+        overlayClose: true,
+        titleBar: {
+          enable: false,
+          closeButton: true,
+          closeText: '✕',
+          position: 'top'
+        }
       };
 
-      if (!params) return (0, _deepmerge2.default)(defaultConfig, defaultTitlebarConfig);
+      if (isInit && !params) return defaultConfig;
 
       var cleanUpParams = function () {
         var ret = params;
@@ -2250,11 +2248,7 @@ var Container = exports.Container = function (_Component) {
         return ret;
       }();
 
-      var _mergedConfig = (0, _deepmerge2.default)(defaultConfig, params);
-      var _mergedTitlebarConfig = (0, _deepmerge2.default)(defaultTitlebarConfig, params.titleBar || {});
-
-      delete _mergedConfig.titleBar;
-      return (0, _deepmerge2.default)(_mergedConfig, _mergedTitlebarConfig);
+      return (0, _deepmerge2.default)(isInit ? defaultConfig : this._defaultState, params);
     }
   }, {
     key: 'onKeyDown',
@@ -2298,9 +2292,8 @@ var Container = exports.Container = function (_Component) {
 
 
       if (show) {
-        var _props = this.props,
-            onComplete = _props.onComplete,
-            onOpen = _props.onOpen;
+        var onComplete = currentConfig.onComplete,
+            onOpen = currentConfig.onOpen;
 
         this.setState((0, _deepmerge2.default)(currentConfig, {
           children: children,
@@ -2312,7 +2305,7 @@ var Container = exports.Container = function (_Component) {
         }));
         onOpen && onOpen();
       } else {
-        var onCleanUp = this.props.onCleanUp;
+        var onCleanUp = currentConfig.onCleanUp;
 
         onCleanUp && onCleanUp();
         this.setState({
@@ -2327,7 +2320,7 @@ var Container = exports.Container = function (_Component) {
   }, {
     key: 'onClosed',
     value: function onClosed() {
-      var onClosed = this.props.onClosed;
+      var onClosed = this.state.onClosed;
 
       onClosed && onClosed();
       this.setState(this._defaultState);
@@ -2342,7 +2335,7 @@ var Container = exports.Container = function (_Component) {
     value: function renderTitleBar() {
       var _state = this.state,
           className = _state.className,
-          text = _state.text,
+          text = _state.titleBar.text,
           closeText = _state.closeText,
           closeButton = _state.closeButton,
           closeButtonClassName = _state.closeButtonClassName;
@@ -2373,12 +2366,12 @@ var Container = exports.Container = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var titleBar = this.state;
       var _state2 = this.state,
           overlayOpacity = _state2.overlayOpacity,
           show = _state2.show,
           children = _state2.children,
-          className = _state2.className;
+          className = _state2.className,
+          titleBar = _state2.titleBar;
 
 
       return _react2.default.createElement(

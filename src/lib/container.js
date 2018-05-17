@@ -15,24 +15,23 @@ export class Container extends Component {
   }
 
   getConfig({ params, isInit }) {
-    const defaultConfig = isInit ? {
+    const defaultConfig = {
       overlayOpacity: 0.75,
       show: false,
       fadeIn: false,
       fadeInSpeed: 500,
       fadeOut: true,
       fadeOutSpeed: 500,
-      overlayClose: true
-    } : this._defaultState
-
-    const defaultTitlebarConfig = {
-      enable: false,
-      closeButton: true,
-      closeText: '✕',
-      position: 'top'
+      overlayClose: true,
+      titleBar: {
+        enable: false,
+        closeButton: true,
+        closeText: '✕',
+        position: 'top'
+      }
     }
 
-    if (!params) return merge(defaultConfig, defaultTitlebarConfig)
+    if (isInit && !params) return defaultConfig
 
     const cleanUpParams = (() => {
       const ret = params
@@ -41,11 +40,7 @@ export class Container extends Component {
       return ret
     })()
 
-    const _mergedConfig = merge(defaultConfig, params)
-    const _mergedTitlebarConfig = merge(defaultTitlebarConfig, params.titleBar || {})
-
-    delete _mergedConfig.titleBar
-    return merge(_mergedConfig, _mergedTitlebarConfig)
+    return merge(isInit ? defaultConfig : this._defaultState, params)
   }
 
   onKeyDown(e) {
@@ -75,7 +70,7 @@ export class Container extends Component {
     const { fadeIn, fadeInSpeed, fadeOut, fadeOutSpeed } = currentConfig
 
     if (show) {
-      const { onComplete, onOpen } = this.props
+      const { onComplete, onOpen } = currentConfig
       this.setState(merge(currentConfig, {
         children: children,
         show: true,
@@ -86,7 +81,7 @@ export class Container extends Component {
       }))
       onOpen && onOpen()
     } else {
-      const { onCleanUp } = this.props
+      const { onCleanUp } = currentConfig
       onCleanUp && onCleanUp()
       this.setState({
         show: false,
@@ -99,7 +94,7 @@ export class Container extends Component {
   }
 
   onClosed() {
-    const { onClosed } = this.props
+    const { onClosed } = this.state
     onClosed && onClosed()
     this.setState(this._defaultState)
   }
@@ -109,7 +104,7 @@ export class Container extends Component {
   }
 
   renderTitleBar() {
-    const { className, text, closeText, closeButton, closeButtonClassName } = this.state
+    const { className, titleBar: { text } , closeText, closeButton, closeButtonClassName } = this.state
 
     const titleBarClass = {}
     if (className) {
@@ -131,12 +126,12 @@ export class Container extends Component {
   }
 
   render() {
-    const titleBar = this.state
     const {
       overlayOpacity,
       show,
       children,
-      className
+      className,
+      titleBar
     } = this.state
 
     return (

@@ -30,7 +30,6 @@ class Manager extends EventEmitter {
       console.warn('[popupbox.open] parameter \'content\' is required.')
       return false
     }
-
     this.content = content || null
     this.config = config || this._defaultConfig
     this.show = true
