@@ -33,13 +33,6 @@ export class Container extends Component {
 
     if (isInit && !params) return defaultConfig
 
-    const cleanUpParams = (() => {
-      const ret = params
-      delete ret.children
-      delete ret.lightbox
-      return ret
-    })()
-
     return merge(isInit ? defaultConfig : this._defaultState, params)
   }
 
@@ -104,20 +97,15 @@ export class Container extends Component {
   }
 
   renderTitleBar() {
-    const { className, titleBar: { text } , closeText, closeButton, closeButtonClassName } = this.state
-
-    const titleBarClass = {}
-    if (className) {
-      titleBarClass[className] = titleBarClass
-    }
+    const { className, text, closeText, closeButton, closeButtonClassName } = this.state.titleBar
 
     return (
-      <div className={`popupbox-titleBar ${titleBarClass}`}>
+      <div className={`popupbox-titleBar${className ? ` ${className}` : ''}`}>
         <span>{ (text && text.length) ? text : <br /> }</span>
         { closeButton &&
           <button
             onClick={this.closeImagebox}
-            className={`popupbox-btn--close ${closeButtonClassName}`}>
+            className={`popupbox-btn--close${closeButtonClassName ? ` ${closeButtonClassName}` : ''}`}>
             { closeText }
           </button>
         }
@@ -136,17 +124,21 @@ export class Container extends Component {
 
     return (
       <div
-        data-title={ (titleBar.enable) ? titleBar.position : null }
+        data-title={ titleBar.enable ? titleBar.position : null }
         style={{ transition: this.state.transition }}
-        className={`popupbox ${show && 'is-active'}`}
+        className={`popupbox${show ? ' is-active': ''}`}
       >
-        <div className={`popupbox-wrapper ${className}`}>
+        <div className={`popupbox-wrapper${className ? ` ${className}` : ''}`}>
           { titleBar.enable && this.renderTitleBar() }
           <div className="popupbox-content">
             { children }
           </div>
         </div>
-        <div className="popupbox-overlay" style={{ opacity: overlayOpacity }} onClick={ this.state.overlayClose && this.closeImagebox } />
+        <div 
+          className="popupbox-overlay" 
+          style={{ opacity: overlayOpacity }} 
+          onClick={ this.state.overlayClose && this.closeImagebox } 
+        />
       </div>
     )
   }

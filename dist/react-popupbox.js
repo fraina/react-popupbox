@@ -2241,13 +2241,6 @@ var Container = exports.Container = function (_Component) {
 
       if (isInit && !params) return defaultConfig;
 
-      var cleanUpParams = function () {
-        var ret = params;
-        delete ret.children;
-        delete ret.lightbox;
-        return ret;
-      }();
-
       return (0, _deepmerge2.default)(isInit ? defaultConfig : this._defaultState, params);
     }
   }, {
@@ -2333,22 +2326,17 @@ var Container = exports.Container = function (_Component) {
   }, {
     key: 'renderTitleBar',
     value: function renderTitleBar() {
-      var _state = this.state,
-          className = _state.className,
-          text = _state.titleBar.text,
-          closeText = _state.closeText,
-          closeButton = _state.closeButton,
-          closeButtonClassName = _state.closeButtonClassName;
+      var _state$titleBar = this.state.titleBar,
+          className = _state$titleBar.className,
+          text = _state$titleBar.text,
+          closeText = _state$titleBar.closeText,
+          closeButton = _state$titleBar.closeButton,
+          closeButtonClassName = _state$titleBar.closeButtonClassName;
 
-
-      var titleBarClass = {};
-      if (className) {
-        titleBarClass[className] = titleBarClass;
-      }
 
       return _react2.default.createElement(
         'div',
-        { className: 'popupbox-titleBar ' + titleBarClass },
+        { className: 'popupbox-titleBar' + (className ? ' ' + className : '') },
         _react2.default.createElement(
           'span',
           null,
@@ -2358,7 +2346,7 @@ var Container = exports.Container = function (_Component) {
           'button',
           {
             onClick: this.closeImagebox,
-            className: 'popupbox-btn--close ' + closeButtonClassName },
+            className: 'popupbox-btn--close' + (closeButtonClassName ? ' ' + closeButtonClassName : '') },
           closeText
         )
       );
@@ -2366,12 +2354,12 @@ var Container = exports.Container = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
-      var _state2 = this.state,
-          overlayOpacity = _state2.overlayOpacity,
-          show = _state2.show,
-          children = _state2.children,
-          className = _state2.className,
-          titleBar = _state2.titleBar;
+      var _state = this.state,
+          overlayOpacity = _state.overlayOpacity,
+          show = _state.show,
+          children = _state.children,
+          className = _state.className,
+          titleBar = _state.titleBar;
 
 
       return _react2.default.createElement(
@@ -2379,11 +2367,11 @@ var Container = exports.Container = function (_Component) {
         {
           'data-title': titleBar.enable ? titleBar.position : null,
           style: { transition: this.state.transition },
-          className: 'popupbox ' + (show && 'is-active')
+          className: 'popupbox' + (show ? ' is-active' : '')
         },
         _react2.default.createElement(
           'div',
-          { className: 'popupbox-wrapper ' + className },
+          { className: 'popupbox-wrapper' + (className ? ' ' + className : '') },
           titleBar.enable && this.renderTitleBar(),
           _react2.default.createElement(
             'div',
@@ -2391,7 +2379,11 @@ var Container = exports.Container = function (_Component) {
             children
           )
         ),
-        _react2.default.createElement('div', { className: 'popupbox-overlay', style: { opacity: overlayOpacity }, onClick: this.state.overlayClose && this.closeImagebox })
+        _react2.default.createElement('div', {
+          className: 'popupbox-overlay',
+          style: { opacity: overlayOpacity },
+          onClick: this.state.overlayClose && this.closeImagebox
+        })
       );
     }
   }]);
