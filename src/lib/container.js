@@ -28,7 +28,8 @@ export class Container extends Component {
         closeButton: true,
         closeText: '✕',
         position: 'top'
-      }
+      },
+      content: {}
     }
 
     if (isInit && !params) return defaultConfig
@@ -118,8 +119,10 @@ export class Container extends Component {
       overlayOpacity,
       show,
       children,
+      style,
       className,
-      titleBar
+      titleBar,
+      content
     } = this.state
 
     return (
@@ -128,9 +131,15 @@ export class Container extends Component {
         style={{ transition: this.state.transition }}
         className={`popupbox${show ? ' is-active': ''}`}
       >
-        <div className={`popupbox-wrapper${className ? ` ${className}` : ''}`}>
+        <div 
+          className={`popupbox-wrapper${className ? ` ${className}` : ''}`}
+          style={style && style || {}}
+        >
           { titleBar.enable && this.renderTitleBar() }
-          <div className="popupbox-content">
+          <div 
+            className={`popupbox-content${content.className ? ` ${content.className}` : ''}`}
+            style={content.style && content.style || {}}
+          >
             { children }
           </div>
         </div>

@@ -2236,7 +2236,8 @@ var Container = exports.Container = function (_Component) {
           closeButton: true,
           closeText: '✕',
           position: 'top'
-        }
+        },
+        content: {}
       };
 
       if (isInit && !params) return defaultConfig;
@@ -2358,8 +2359,10 @@ var Container = exports.Container = function (_Component) {
           overlayOpacity = _state.overlayOpacity,
           show = _state.show,
           children = _state.children,
+          style = _state.style,
           className = _state.className,
-          titleBar = _state.titleBar;
+          titleBar = _state.titleBar,
+          content = _state.content;
 
 
       return _react2.default.createElement(
@@ -2371,11 +2374,17 @@ var Container = exports.Container = function (_Component) {
         },
         _react2.default.createElement(
           'div',
-          { className: 'popupbox-wrapper' + (className ? ' ' + className : '') },
+          {
+            className: 'popupbox-wrapper' + (className ? ' ' + className : ''),
+            style: style && style || {}
+          },
           titleBar.enable && this.renderTitleBar(),
           _react2.default.createElement(
             'div',
-            { className: 'popupbox-content' },
+            {
+              className: 'popupbox-content' + (content.className ? ' ' + content.className : ''),
+              style: content.style && content.style || {}
+            },
             children
           )
         ),
