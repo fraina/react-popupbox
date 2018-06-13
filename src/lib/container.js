@@ -133,12 +133,12 @@ export class Container extends Component {
       >
         <div 
           className={`popupbox-wrapper${className ? ` ${className}` : ''}`}
-          style={style && style || {}}
+          style={style ? style : undefined}
         >
           { titleBar.enable && this.renderTitleBar() }
           <div 
             className={`popupbox-content${content.className ? ` ${content.className}` : ''}`}
-            style={content.style && content.style || {}}
+            style={content.style ? content.style : undefined}
           >
             { children }
           </div>
@@ -146,7 +146,7 @@ export class Container extends Component {
         <div 
           className="popupbox-overlay" 
           style={{ opacity: overlayOpacity }} 
-          onClick={ this.state.overlayClose && this.closeImagebox } 
+          onClick={this.state.overlayClose ? this.closeImagebox : undefined} 
         />
       </div>
     )

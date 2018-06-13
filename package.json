@@ -1,6 +1,6 @@
 {
   "name": "react-popupbox",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "A simple lightbox component for react",
   "main": "dist/react-popupbox.js",
   "repository": {
