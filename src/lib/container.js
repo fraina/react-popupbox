@@ -23,6 +23,7 @@ export class Container extends Component {
       fadeOut: true,
       fadeOutSpeed: 500,
       overlayClose: true,
+      escClose: true,
       titleBar: {
         enable: false,
         closeButton: true,
@@ -38,6 +39,7 @@ export class Container extends Component {
   }
 
   onKeyDown(e) {
+    if (!this.state.escClose) return
     if (this.state.show && (e.keyCode === 27)) {
       this.closeImagebox()
     }
