@@ -8,11 +8,19 @@ A simple lightbox component for react, inspired by [colorbox](https://github.com
 
 See [demo & usage](http://fraina.github.io/react-popupbox/).
 
-## install
+## Install
 
-install via npm:
+Install via npm:
 ```
 $ npm install react-popupbox
+```
+
+## Styles
+
+In order to bring in the styles, import the `css` file:
+```
+import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
+import "react-popupbox/dist/react-popupbox.css"
 ```
 
 ## License
