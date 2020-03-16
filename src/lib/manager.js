@@ -43,6 +43,13 @@ class Manager extends EventEmitter {
   }
 
   close() {
+    if (this.config.confirmClose) {
+      if (this.config.confirmClose()) {
+        this.show = false;
+        this.emitChange();
+      }
+      return
+    }
     this.show = false
     this.emitChange()
   }
