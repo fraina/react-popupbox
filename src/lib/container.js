@@ -11,6 +11,8 @@ export class Container extends Component {
     Manager.setDefault(this._defaultState)
 
     this.handleStoreChange = this.handleStoreChange.bind(this)
+    Manager.addChangeListener(this.handleStoreChange)
+
     this.closeImagebox = Manager.close.bind(Manager)
   }
 
@@ -43,10 +45,6 @@ export class Container extends Component {
     if (this.state.show && (e.keyCode === 27)) {
       this.closeImagebox()
     }
-  }
-
-  componentWillMount() {
-    Manager.addChangeListener(this.handleStoreChange)
   }
 
   componentDidMount() {
@@ -133,22 +131,22 @@ export class Container extends Component {
         style={{ transition: this.state.transition }}
         className={`popupbox${show ? ' is-active': ''}`}
       >
-        <div 
+        <div
           className={`popupbox-wrapper${className ? ` ${className}` : ''}`}
           style={style ? style : undefined}
         >
           { titleBar.enable && this.renderTitleBar() }
-          <div 
+          <div
             className={`popupbox-content${content.className ? ` ${content.className}` : ''}`}
             style={content.style ? content.style : undefined}
           >
             { children }
           </div>
         </div>
-        <div 
-          className="popupbox-overlay" 
-          style={{ opacity: overlayOpacity }} 
-          onClick={this.state.overlayClose ? this.closeImagebox : undefined} 
+        <div
+          className="popupbox-overlay"
+          style={{ opacity: overlayOpacity }}
+          onClick={this.state.overlayClose ? this.closeImagebox : undefined}
         />
       </div>
     )
