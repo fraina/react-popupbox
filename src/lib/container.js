@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Manager from './manager'
 import merge from 'deepmerge'
 
-export class Container extends Component {
+class Container extends Component {
   constructor(props) {
     super(props)
 
@@ -133,24 +133,26 @@ export class Container extends Component {
         style={{ transition: this.state.transition }}
         className={`popupbox${show ? ' is-active': ''}`}
       >
-        <div 
+        <div
           className={`popupbox-wrapper${className ? ` ${className}` : ''}`}
           style={style ? style : undefined}
         >
           { titleBar.enable && this.renderTitleBar() }
-          <div 
+          <div
             className={`popupbox-content${content.className ? ` ${content.className}` : ''}`}
             style={content.style ? content.style : undefined}
           >
             { children }
           </div>
         </div>
-        <div 
-          className="popupbox-overlay" 
-          style={{ opacity: overlayOpacity }} 
-          onClick={this.state.overlayClose ? this.closeImagebox : undefined} 
+        <div
+          className="popupbox-overlay"
+          style={{ opacity: overlayOpacity }}
+          onClick={this.state.overlayClose ? this.closeImagebox : undefined}
         />
       </div>
     )
   }
 }
+
+export default Container

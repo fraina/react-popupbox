@@ -1,8 +1,9 @@
 {
   "name": "react-popupbox",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "A simple lightbox component for react",
   "main": "dist/react-popupbox.js",
+  "types": "dist/react-popupbox.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Fraina/react-popupbox.git"
