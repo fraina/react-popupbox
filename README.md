@@ -23,5 +23,11 @@ import { PopupboxManager, PopupboxContainer } from 'react-popupbox';
 import "react-popupbox/dist/react-popupbox.css"
 ```
 
+## Development Notes
+
+`<PopupboxContainer />` should only be mounted once in your application (near the root of your component tree, avoid using in deeply nested children, `Array.map` returns etc.). Improperly placed or multiple PopupboxContainers can lead to unnecessary unmounting of the component and `Warning: Can't perform a React state update on an unmounted component` errors.
+
+To display different popups throughout the app, simply change the content passed to PopupboxManager.open({ content: <p>My unique content!</p> }) call each time.
+
 ## License
 MIT
